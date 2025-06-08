@@ -1,4 +1,4 @@
-name = "yg-site"
+name = "ygsite"
 compatibility_date = "2025-06-08"
 main = "workers-site/index.js"
 

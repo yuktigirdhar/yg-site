@@ -1,0 +1,6 @@
+name = "yg-site"
+compatibility_date = "2025-06-08"
+main = "workers-site/index.js"
+
+[site]
+bucket = "dist"

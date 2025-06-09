@@ -1,28 +1,25 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
 
-async function handleRequest(request) {
-  const url = new URL(request.url)
-  const path = url.pathname
-  const domain = url.hostname
-
-  // Try to serve static assets directly
-  if (path !== '/') {
-    try {
-      const response = await fetch(`https://${domain}${path}`)
-      if (response.ok) {
-        return response
-      }
-    } catch (error) {
-      // If the asset doesn't exist, fall through to serve index.html
+    // Handle API routes (optional)
+    if (url.pathname.startsWith("/api/")) {
+      return new Response(JSON.stringify({ message: "Hello from API" }), {
+        headers: { "Content-Type": "application/json" },
+      });
     }
-  }
 
-  // For all other requests, serve index.html
-  const indexResponse = await fetch(`https://${domain}/`)
-  return new Response(indexResponse.body, {
-    status: indexResponse.status,
-    headers: indexResponse.headers,
-  })
-}
+    console.log(request);
+    // Try serving static assets
+    let response = await env.ASSETS.fetch(request);
+
+    console.log(response);
+    // If asset not found, serve index.html (for SPA routing)
+    if (response.status === 404) {
+      const indexRequest = new Request(`${url.origin}/index.html`, request);
+      response = await env.ASSETS.fetch(indexRequest);
+    }
+
+    return response;
+  },
+};

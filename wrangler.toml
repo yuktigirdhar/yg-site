@@ -1,6 +1,10 @@
 name = "ygsite"
 compatibility_date = "2025-06-08"
+
 main = "workers-site/index.js"
 
-[site]
-bucket = "dist"
+route = { pattern = "yuktigirdhar.com/*", zone_name = "yuktigirdhar.com" }
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
